@@ -1,0 +1,6 @@
+debug: true
+address: bolt://127.0.0.1:7687
+username: ""
+password: ""
+maxConnectionPoolSize: 10000
+tls: false

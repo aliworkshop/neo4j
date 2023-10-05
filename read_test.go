@@ -1,0 +1,108 @@
+package neo4j
+
+import (
+	"fmt"
+	"github.com/aliworkshop/configer"
+	"github.com/aliworkshop/dbcore"
+	"github.com/stretchr/testify/assert"
+	"os"
+	"testing"
+)
+
+func TestNeo_Get(t *testing.T) {
+	registry := configer.New()
+	registry.SetConfigType("yaml")
+	f, err := os.Open("./config.sample.yaml")
+	if err != nil {
+		panic("cannot read config: " + err.Error())
+	}
+	err = registry.ReadConfig(f)
+	if err != nil {
+		panic("cannot read config" + err.Error())
+	}
+
+	db := NewNeo4jRepository(registry)
+	err = db.Initialize()
+	assert.Nil(t, err)
+
+	item, err := db.Get(NewQuery().WithModelFunc(func() dbcore.Modeler {
+		return new(User)
+	}))
+	assert.Nil(t, err)
+	assert.NotNil(t, item)
+}
+
+func TestNeo_Count(t *testing.T) {
+	registry := configer.New()
+	registry.SetConfigType("yaml")
+	f, err := os.Open("./config.sample.yaml")
+	if err != nil {
+		panic("cannot read config: " + err.Error())
+	}
+	err = registry.ReadConfig(f)
+	if err != nil {
+		panic("cannot read config" + err.Error())
+	}
+
+	db := NewNeo4jRepository(registry)
+	err = db.Initialize()
+	assert.Nil(t, err)
+
+	count, err := db.Count(NewQuery().WithModelFunc(func() dbcore.Modeler {
+		return new(User)
+	}))
+	assert.Nil(t, err)
+	assert.NotNil(t, count)
+}
+
+func TestNeo_Followings(t *testing.T) {
+	registry := configer.New()
+	registry.SetConfigType("yaml")
+	f, err := os.Open("./config.sample.yaml")
+	if err != nil {
+		panic("cannot read config: " + err.Error())
+	}
+	err = registry.ReadConfig(f)
+	if err != nil {
+		panic("cannot read config" + err.Error())
+	}
+
+	db := NewNeo4jRepository(registry)
+	err = db.Initialize()
+	assert.Nil(t, err)
+
+	items, err := db.List(NewQuery().WithModelFunc(func() dbcore.Modeler {
+		return new(User)
+	}).WithQuery(`
+	MATCH(u:User)-[:FOLLOWS]->(n:User) WHERE u.Name=$Name RETURN n`).WithParams("Name", "ali"))
+	assert.Nil(t, err)
+	for _, item := range items.([]*User) {
+		fmt.Println(item)
+	}
+}
+
+func TestNeo_Followers(t *testing.T) {
+	registry := configer.New()
+	registry.SetConfigType("yaml")
+	f, err := os.Open("./config.sample.yaml")
+	if err != nil {
+		panic("cannot read config: " + err.Error())
+	}
+	err = registry.ReadConfig(f)
+	if err != nil {
+		panic("cannot read config" + err.Error())
+	}
+
+	db := NewNeo4jRepository(registry)
+	err = db.Initialize()
+	assert.Nil(t, err)
+
+	items, err := db.List(NewQuery().WithModelFunc(func() dbcore.Modeler {
+		return new(User)
+	}).WithQuery(`
+	MATCH(u:User)<-[:FOLLOWS]-(n:User) WHERE u.first_name=$Name RETURN n`).WithParams("Name", "John"))
+	assert.Nil(t, err)
+	for _, item := range items.([]*User) {
+		fmt.Println(item)
+	}
+}
