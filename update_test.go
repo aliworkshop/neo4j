@@ -21,7 +21,7 @@ func TestNeo_Update(t *testing.T) {
 	}
 
 	db := NewNeo4jRepository(registry)
-	err = db.Initialize()
+	err = db.Connect()
 	assert.Nil(t, err)
 	defer db.Close()
 

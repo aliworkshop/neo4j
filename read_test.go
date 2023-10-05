@@ -22,7 +22,7 @@ func TestNeo_Get(t *testing.T) {
 	}
 
 	db := NewNeo4jRepository(registry)
-	err = db.Initialize()
+	err = db.Connect()
 	assert.Nil(t, err)
 	defer db.Close()
 
@@ -46,7 +46,7 @@ func TestNeo_Count(t *testing.T) {
 	}
 
 	db := NewNeo4jRepository(registry)
-	err = db.Initialize()
+	err = db.Connect()
 	assert.Nil(t, err)
 	defer db.Close()
 
@@ -70,7 +70,7 @@ func TestNeo_Followings(t *testing.T) {
 	}
 
 	db := NewNeo4jRepository(registry)
-	err = db.Initialize()
+	err = db.Connect()
 	assert.Nil(t, err)
 	defer db.Close()
 
@@ -97,7 +97,7 @@ func TestNeo_Followers(t *testing.T) {
 	}
 
 	db := NewNeo4jRepository(registry)
-	err = db.Initialize()
+	err = db.Connect()
 	assert.Nil(t, err)
 	defer db.Close()
 

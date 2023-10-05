@@ -25,7 +25,7 @@ func (n *neo) DB() any {
 	return n.db
 }
 
-func (n *neo) Initialize() error.ErrorModel {
+func (n *neo) Connect() error.ErrorModel {
 	driver, err := neo4j.NewDriver(n.cfg.Address, neo4j.BasicAuth(n.cfg.Username, n.cfg.Password, ""), func(config *neo4j.Config) {
 		config.Encrypted = n.cfg.Tls
 		config.MaxConnectionPoolSize = n.cfg.MaxConnectionPoolSize

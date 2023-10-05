@@ -21,7 +21,7 @@ func TestNeo_CommitTransaction(t *testing.T) {
 	}
 
 	db := NewNeo4jRepository(registry)
-	err = db.Initialize()
+	err = db.Connect()
 	assert.Nil(t, err)
 	defer db.Close()
 
@@ -55,7 +55,7 @@ func TestNeo_RollbackTransaction(t *testing.T) {
 	}
 
 	db := NewNeo4jRepository(registry)
-	err = db.Initialize()
+	err = db.Connect()
 	assert.Nil(t, err)
 	defer db.Close()
 

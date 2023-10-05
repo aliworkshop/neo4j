@@ -5,7 +5,7 @@ import (
 )
 
 type Repository interface {
-	Initialize() error.ErrorModel
+	Connect() error.ErrorModel
 	DB() any
 	Close() error.ErrorModel
 	Ping() error.ErrorModel
