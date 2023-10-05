@@ -24,6 +24,7 @@ func TestNeo_Get(t *testing.T) {
 	db := NewNeo4jRepository(registry)
 	err = db.Initialize()
 	assert.Nil(t, err)
+	defer db.Close()
 
 	item, err := db.Get(NewQuery().WithModelFunc(func() dbcore.Modeler {
 		return new(User)
@@ -47,6 +48,7 @@ func TestNeo_Count(t *testing.T) {
 	db := NewNeo4jRepository(registry)
 	err = db.Initialize()
 	assert.Nil(t, err)
+	defer db.Close()
 
 	count, err := db.Count(NewQuery().WithModelFunc(func() dbcore.Modeler {
 		return new(User)
@@ -70,6 +72,7 @@ func TestNeo_Followings(t *testing.T) {
 	db := NewNeo4jRepository(registry)
 	err = db.Initialize()
 	assert.Nil(t, err)
+	defer db.Close()
 
 	items, err := db.List(NewQuery().WithModelFunc(func() dbcore.Modeler {
 		return new(User)
@@ -96,6 +99,7 @@ func TestNeo_Followers(t *testing.T) {
 	db := NewNeo4jRepository(registry)
 	err = db.Initialize()
 	assert.Nil(t, err)
+	defer db.Close()
 
 	items, err := db.List(NewQuery().WithModelFunc(func() dbcore.Modeler {
 		return new(User)

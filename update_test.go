@@ -23,6 +23,7 @@ func TestNeo_Update(t *testing.T) {
 	db := NewNeo4jRepository(registry)
 	err = db.Initialize()
 	assert.Nil(t, err)
+	defer db.Close()
 
 	item, err := db.Get(NewQuery().WithModelFunc(func() dbcore.Modeler {
 		return new(User)

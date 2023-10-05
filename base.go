@@ -7,6 +7,7 @@ import (
 type Repository interface {
 	Initialize() error.ErrorModel
 	DB() any
+	Close() error.ErrorModel
 	Ping() error.ErrorModel
 
 	Count(query Query) (count uint64, err error.ErrorModel)

@@ -22,6 +22,7 @@ func TestNeo_Ping(t *testing.T) {
 	db := NewNeo4jRepository(registry)
 	err = db.Initialize()
 	assert.Nil(t, err)
+	defer db.Close()
 
 	err = db.Ping()
 	assert.Nil(t, err)

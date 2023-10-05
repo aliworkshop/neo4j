@@ -23,6 +23,7 @@ func TestNeo_Delete(t *testing.T) {
 	db := NewNeo4jRepository(registry)
 	err = db.Initialize()
 	assert.Nil(t, err)
+	defer db.Close()
 
 	err = db.Delete(NewQuery().WithModelFunc(func() dbcore.Modeler {
 		return new(User)

@@ -35,6 +35,7 @@ func TestNeo_Insert(t *testing.T) {
 	db := NewNeo4jRepository(registry)
 	err = db.Initialize()
 	assert.Nil(t, err)
+	defer db.Close()
 
 	uuid := uuid.New().String()
 	u := &User{

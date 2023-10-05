@@ -37,3 +37,7 @@ func (n *neo) Initialize() error.ErrorModel {
 	n.db = driver
 	return nil
 }
+
+func (n *neo) Close() error.ErrorModel {
+	return error.HandleError(n.db.Close())
+}

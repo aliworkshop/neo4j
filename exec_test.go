@@ -22,6 +22,7 @@ func TestNeo_Follow(t *testing.T) {
 	db := NewNeo4jRepository(registry)
 	err = db.Initialize()
 	assert.Nil(t, err)
+	defer db.Close()
 
 	err = db.Exec(NewQuery().WithQuery(`
 	MATCH (u:User), (p:User) WHERE u.Name=$Name1 and p.first_name=$Name2
