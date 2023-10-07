@@ -6,6 +6,7 @@ import (
 	"github.com/aliworkshop/error"
 	"github.com/neo4j/neo4j-go-driver/neo4j"
 	"reflect"
+	"strings"
 )
 
 func (n *neo) Count(query Query) (count uint64, err error.ErrorModel) {
@@ -63,7 +64,18 @@ func (n *neo) List(query Query) (items any, err error.ErrorModel) {
 		return nil, error.Internal(e)
 	}
 	defer session.Close()
+	offset := (query.GetPage() - 1) * query.GetPageSize()
 	if len(query.GetQuery()) > 0 {
+		q := strings.ReplaceAll(query.GetQuery(), "\n", " ")
+		q = strings.ReplaceAll(q, "\t", "")
+		sort, err := n.sort(query)
+		if err != nil {
+			return nil, err
+		}
+		if len(sort) > 0 {
+			q += fmt.Sprintf(" ORDER BY %s", sort)
+		}
+		q += fmt.Sprintf(" SKIP %d LIMIT %d", offset, query.GetPageSize())
 		result, ee := session.Run(query.GetQuery(), query.GetParams())
 		if ee != nil {
 			return nil, error.Internal(ee)
@@ -101,7 +113,15 @@ func (n *neo) List(query Query) (items any, err error.ErrorModel) {
 	if len(query.GetFilter()) > 0 {
 		q = q[:len(q)-4]
 	}
-	q += fmt.Sprintf(" RETURN n LIMIT %d", query.GetPageSize())
+	q += fmt.Sprintf(" RETURN n")
+	sort, err := n.sort(query, "n")
+	if err != nil {
+		return nil, err
+	}
+	if len(sort) > 0 {
+		q += fmt.Sprintf(" ORDER BY %s", sort)
+	}
+	q += fmt.Sprintf(" SKIP %d LIMIT %d", offset, query.GetPageSize())
 	result, ee := session.Run(q, params)
 	if ee != nil {
 		return nil, error.Internal(ee)

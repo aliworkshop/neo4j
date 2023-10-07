@@ -9,6 +9,7 @@ import (
 )
 
 type User struct {
+	Id        uint64 `json:"id"`
 	Uuid      string `json:"uuid"`
 	FirstName string `json:"first_name"`
 	LastName  string `json:"last_name"`
@@ -39,6 +40,7 @@ func TestNeo_Insert(t *testing.T) {
 
 	uuid := uuid.New().String()
 	u := &User{
+		Id:        13,
 		Uuid:      uuid,
 		FirstName: "John",
 		LastName:  "Cena",

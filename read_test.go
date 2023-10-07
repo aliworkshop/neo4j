@@ -77,7 +77,10 @@ func TestNeo_Followings(t *testing.T) {
 	items, err := db.List(NewQuery().WithModelFunc(func() dbcore.Modeler {
 		return new(User)
 	}).WithQuery(`
-	MATCH(u:User)-[:FOLLOWS]->(n:User) WHERE u.Name=$Name RETURN n`).WithParams("Name", "ali"))
+	MATCH(u:User)-[:FOLLOWS]->(n:User) WHERE u.Name=$Name RETURN n`).
+		WithParams("Name", "ali").
+		WithSorts(dbcore.SortItem{Field: "id", Order: dbcore.DESC}).
+		WithPage(1).WithPageSize(15))
 	assert.Nil(t, err)
 	for _, item := range items.([]*User) {
 		fmt.Println(item)
