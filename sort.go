@@ -7,7 +7,7 @@ import (
 
 func (n *neo) sort(query Query, prefix ...string) (string, error.ErrorModel) {
 	var pre string
-	if len(prefix) > 0 {
+	if len(prefix) > 0 && len(prefix[0]) > 0 {
 		pre = fmt.Sprintf("%s.", prefix[0])
 	}
 	sortItems := query.GetSort()
