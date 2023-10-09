@@ -19,6 +19,7 @@ type Query interface {
 	GetFilter() map[string]any
 	SetQuery(query string)
 	GetQuery() string
+	GetCountQuery() string
 	GetParams() map[string]any
 	GetPrefix() string
 
@@ -29,6 +30,7 @@ type Query interface {
 	WithSorts(sort ...dbcore.SortItem) Query
 	WithTransaction(transaction any) Query
 	WithQuery(query string) Query
+	WithCountQuery(query string) Query
 	WithFilter(key string, value any) Query
 	WithParams(key string, value any) Query
 	WithPrefix(prefix string) Query
@@ -38,6 +40,7 @@ type ModelFunc func() dbcore.Modeler
 
 type query struct {
 	query       string
+	countQuery  string
 	params      map[string]any
 	modelFunc   ModelFunc
 	transaction any
@@ -118,6 +121,10 @@ func (q *query) GetQuery() string {
 	return q.query
 }
 
+func (q *query) GetCountQuery() string {
+	return q.countQuery
+}
+
 func (q *query) GetParams() map[string]any {
 	return q.params
 }
@@ -160,6 +167,11 @@ func (q *query) WithTransaction(transaction any) Query {
 
 func (q *query) WithQuery(query string) Query {
 	q.query = query
+	return q
+}
+
+func (q *query) WithCountQuery(query string) Query {
+	q.countQuery = query
 	return q
 }
 

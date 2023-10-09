@@ -16,7 +16,9 @@ func (n *neo) Count(query Query) (count uint64, err error.ErrorModel) {
 	}
 	defer session.Close()
 	if len(query.GetQuery()) > 0 {
-		result, ee := session.Run(query.GetQuery(), query.GetParams())
+		q := strings.ReplaceAll(query.GetCountQuery(), "\n", " ")
+		q = strings.ReplaceAll(q, "\t", "")
+		result, ee := session.Run(q, query.GetParams())
 		if ee != nil {
 			return 0, error.Internal(ee)
 		}
@@ -76,7 +78,7 @@ func (n *neo) List(query Query) (items any, err error.ErrorModel) {
 			q += fmt.Sprintf(" ORDER BY %s", sort)
 		}
 		q += fmt.Sprintf(" SKIP %d LIMIT %d", offset, query.GetPageSize())
-		result, ee := session.Run(query.GetQuery(), query.GetParams())
+		result, ee := session.Run(q, query.GetParams())
 		if ee != nil {
 			return nil, error.Internal(ee)
 		}
@@ -156,10 +158,13 @@ func (n *neo) Get(query Query) (item any, err error.ErrorModel) {
 	}
 	defer session.Close()
 	if len(query.GetQuery()) > 0 {
-		result, ee := session.Run(query.GetQuery(), query.GetParams())
+		q := strings.ReplaceAll(query.GetQuery(), "\n", " ")
+		q = strings.ReplaceAll(q, "\t", "")
+		result, ee := session.Run(q, query.GetParams())
 		if ee != nil {
 			return nil, error.Internal(ee)
 		}
+
 		typ := reflect.TypeOf(query.GetModel())
 		elm := reflect.ValueOf(query.GetModel())
 		if elm.Kind() != reflect.Ptr {
