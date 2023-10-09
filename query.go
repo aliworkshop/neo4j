@@ -20,6 +20,7 @@ type Query interface {
 	SetQuery(query string)
 	GetQuery() string
 	GetParams() map[string]any
+	GetPrefix() string
 
 	WithModelFunc(func() dbcore.Modeler) Query
 	WithBody(body any) Query
@@ -30,6 +31,7 @@ type Query interface {
 	WithQuery(query string) Query
 	WithFilter(key string, value any) Query
 	WithParams(key string, value any) Query
+	WithPrefix(prefix string) Query
 }
 
 type ModelFunc func() dbcore.Modeler
@@ -44,6 +46,7 @@ type query struct {
 	sortItem    []dbcore.SortItem
 	body        any
 	filters     map[string]any
+	prefix      string
 }
 
 func NewQuery() Query {
@@ -119,6 +122,10 @@ func (q *query) GetParams() map[string]any {
 	return q.params
 }
 
+func (q *query) GetPrefix() string {
+	return q.prefix
+}
+
 func (q *query) WithModelFunc(f func() dbcore.Modeler) Query {
 	q.modelFunc = f
 	return q
@@ -163,5 +170,10 @@ func (q *query) WithFilter(key string, value any) Query {
 
 func (q *query) WithParams(key string, value any) Query {
 	q.params[key] = value
+	return q
+}
+
+func (q *query) WithPrefix(prefix string) Query {
+	q.prefix = prefix
 	return q
 }

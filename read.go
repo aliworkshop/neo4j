@@ -68,7 +68,7 @@ func (n *neo) List(query Query) (items any, err error.ErrorModel) {
 	if len(query.GetQuery()) > 0 {
 		q := strings.ReplaceAll(query.GetQuery(), "\n", " ")
 		q = strings.ReplaceAll(q, "\t", "")
-		sort, err := n.sort(query)
+		sort, err := n.sort(query, query.GetPrefix())
 		if err != nil {
 			return nil, err
 		}
