@@ -15,7 +15,7 @@ func (n *neo) Count(query Query) (count uint64, err error.ErrorModel) {
 		return 0, error.Internal(e)
 	}
 	defer session.Close()
-	if len(query.GetQuery()) > 0 {
+	if len(query.GetCountQuery()) > 0 {
 		q := strings.ReplaceAll(query.GetCountQuery(), "\n", " ")
 		q = strings.ReplaceAll(q, "\t", "")
 		result, ee := session.Run(q, query.GetParams())
