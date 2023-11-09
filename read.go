@@ -77,7 +77,9 @@ func (n *neo) List(query Query) (items any, err error.ErrorModel) {
 		if len(sort) > 0 {
 			q += fmt.Sprintf(" ORDER BY %s", sort)
 		}
-		q += fmt.Sprintf(" SKIP %d LIMIT %d", offset, query.GetPageSize())
+		if query.GetPageSize() != -1 {
+			q += fmt.Sprintf(" SKIP %d LIMIT %d", offset, query.GetPageSize())
+		}
 		result, ee := session.Run(q, query.GetParams())
 		if ee != nil {
 			return nil, error.Internal(ee)
@@ -123,7 +125,9 @@ func (n *neo) List(query Query) (items any, err error.ErrorModel) {
 	if len(sort) > 0 {
 		q += fmt.Sprintf(" ORDER BY %s", sort)
 	}
-	q += fmt.Sprintf(" SKIP %d LIMIT %d", offset, query.GetPageSize())
+	if query.GetPageSize() != -1 {
+		q += fmt.Sprintf(" SKIP %d LIMIT %d", offset, query.GetPageSize())
+	}
 	result, ee := session.Run(q, params)
 	if ee != nil {
 		return nil, error.Internal(ee)
